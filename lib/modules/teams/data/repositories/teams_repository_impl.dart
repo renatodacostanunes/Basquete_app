@@ -3,11 +3,11 @@ import 'package:basquete_app/modules/teams/domain/entities/team.dart';
 import 'package:basquete_app/modules/teams/domain/repositories/team_repository.dart';
 import 'package:dartz/dartz.dart';
 
-import '../datasources/team_datasource.dart';
+import '../datasource/teams_datasource.dart';
 
-class TeamRepositoryImpl implements TeamRepository {
-  final TeamDataSource dataSource;
-  TeamRepositoryImpl({
+class TeamsRepositoryImpl implements TeamRepository {
+  final TeamsDataSource dataSource;
+  TeamsRepositoryImpl({
     required this.dataSource,
   });
   @override
@@ -15,8 +15,8 @@ class TeamRepositoryImpl implements TeamRepository {
     try {
       final result = await dataSource.fetchTeams();
       if (result == null || result.isEmpty) {
-        return Left(ServerFailure(
-            message: "Não foi possível buscar os times no momento"));
+        return Left(
+            ServerFailure(message: "Nenhum time encontrado. Tente novamente"));
       }
       return Right(result);
     } catch (e) {

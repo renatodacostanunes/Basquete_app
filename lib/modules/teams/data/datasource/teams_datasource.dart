@@ -1,31 +1,28 @@
+import 'package:basquete_app/core/dio/nba_dio.dart';
 import 'package:basquete_app/core/error/failure.dart';
 import 'package:basquete_app/modules/teams/domain/entities/team.dart';
 import 'package:dio/dio.dart';
 
-import '../../../../core/dio/nba_dio.dart';
 import '../mapper/teams_mapper.dart';
 
-class TeamDataSource {
+class TeamsDataSource {
   final NbaDio dio;
-  TeamDataSource({
+  TeamsDataSource({
     required this.dio,
   });
-
   Future<List<Team>?> fetchTeams() async {
     try {
-      List<Team> decodedTeams = [];
+      List<Team> teams = [];
       final response = await dio.get("/teams");
-
-      decodedTeams = (response.data["response"] as List)
+      teams = (response.data["response"] as List)
           .map((e) => TeamsMapper.fromMap(e))
           .toList();
-      return decodedTeams;
+      return teams;
     } on DioError catch (e) {
       if (e.type == DioErrorType.connectTimeout ||
           e.type == DioErrorType.receiveTimeout) {
         throw ConnectionFailure(message: e.message);
       } else {
-        print(e);
         throw ServerFailure(message: e.message);
       }
     } catch (e) {
